@@ -2,3 +2,4 @@
 stations_merged_cleaned.gpkg
 stations_merged_cleaned.csv
 output.geojson
+final_output.geojson

@@ -350,7 +350,7 @@ elif menu == "🤖 Train Model" and st.session_state.df is not None:
         if available_features:
             st.success(f"✅ {len(available_features)} features available")
             
-            model_type = st.selectbox("Model Type", ["Random Forest", "Linear Regression", "XGBoost"])
+            model_type = st.selectbox("Model Type", ["Linear Regression","Lasso Regression","Random Forest", "XGBoost"])
             test_size = st.slider("Test Size %", 10, 40, 20) / 100
             
             if st.button("🚀 Train Model"):
@@ -359,8 +359,8 @@ elif menu == "🤖 Train Model" and st.session_state.df is not None:
                         from sklearn.model_selection import train_test_split
                         from sklearn.preprocessing import StandardScaler
                         from sklearn.ensemble import RandomForestRegressor
-                        from sklearn.linear_model import LinearRegression
-                        from sklearn.metrics import r2_score, mean_squared_error
+                        from sklearn.linear_model import LinearRegression,Lasso
+                        from sklearn.metrics import r2_score, mean_squared_error,mean_absolute_error
                         
                         X = df[available_features].fillna(df[available_features].mean())
                         y = df['sales_volume'].fillna(df['sales_volume'].mean())
@@ -377,25 +377,33 @@ elif menu == "🤖 Train Model" and st.session_state.df is not None:
                             model = RandomForestRegressor(n_estimators=100, random_state=42)
                         elif model_type == "Linear Regression":
                             model = LinearRegression()
-                        # else:
-                        #     try:
-                        #         from xgboost import XGBRegressor
-                        #         model = XGBRegressor(n_estimators=100, random_state=42)
-                        #     except:
-                        #         model = RandomForestRegressor(n_estimators=100, random_state=42)
+                        elif model_type == "Lasso Regression":
+                            model = Lasso(alpha=0.1,max_iter=1000,random_state=42)
+                        else:
+                            try:
+                                from xgboost import XGBRegressor
+                                model = XGBRegressor(n_estimators=100,max_depth=6,learning_rate=0.1,random_state=42,n_jobs=-1)
+                            except:
+                                model = RandomForestRegressor(n_estimators=100, random_state=42)
                         
                         model.fit(X_train_scaled, y_train)
                         y_pred = model.predict(X_test_scaled)
                         r2 = r2_score(y_test, y_pred)
+                        mse = mean_squared_error(y_test, y_pred)
+                        mae = mean_absolute_error(y_test, y_pred)
                         
                         st.session_state.model = {
                             'model': model,
                             'scaler': scaler,
                             'features': available_features,
-                            'r2': r2
+                            'r2': r2,
+                            'mse':mse,
+                            'mae':mae
                         }
                         
                         st.success(f"✅ Model trained! R²: {r2:.4f}")
+                        st.success(f"✅ Model trained! MAE: {mae:.4f}")
+                        st.success(f"✅ Model trained! MSE: {mse:.4f}")
                         
                     except Exception as e:
                         st.error(f"Error: {str(e)}")
@@ -411,6 +419,9 @@ elif menu == "📊 Predict & Assess":
         features = model_info['features']
         
         st.success(f"✅ Model ready with R²: {model_info['r2']:.4f}")
+        st.success(f"✅ Model ready with MAE: {model_info['mae']:.4f}")
+        st.success(f"✅ Model ready with MSE: {model_info['mse']:.4f}")
+        
         
         # Input form
         st.subheader("📍 Enter Site Parameters")

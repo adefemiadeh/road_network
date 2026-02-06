@@ -3,3 +3,24 @@ stations_merged_cleaned.gpkg
 stations_merged_cleaned.csv
 output.geojson
 final_output.geojson
+figure_4_1_spatial_distribution.png 
+figure_4_2_sales_original.png 
+figure_4_3_sales_log.png 
+figure_4_4_correlation_heatmap.png 
+figure_4_5_lr_coefficients.png 
+figure_4_6_lasso_features.png 
+figure_4_7_decision_tree.png 
+figure_4_8_rf_importance.png 
+figure_4_9_xgb_importance.png 
+figure_4_10_model_comparison.png 
+figure_4_11_shap_summary.png 
+figure_4_12_shap_dependence.png 
+figure_4_13_lime_high-performing_station.png 
+figure_4_14_lime_low-performing_station.png 
+figure_4_15_pdp.png figure_4_16_residual_analysis.png
+table_4_1_descriptive_stats.csv
+model_comparison_all_metrics.png 
+model_comparison.png 
+model_overall_ranking.png 
+model_ranking_comparison.png 
+normalized_scores_comparison.png
